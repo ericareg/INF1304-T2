@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sebo</title>
+  <style>
+    :root {
+      --fundo: #f6f1e7;
+      --cartao: #fffdf8;
+      --texto: #2b2420;
+      --suave: #6f645b;
+      --borda: #e2d8c6;
+      --destaque: #7a3e1d;
+      --destaque-hover: #5e2f15;
+      --ok-fundo: #e7f3e8;
+      --ok-texto: #1f5a2a;
+      --aviso-fundo: #fdf3dc;
+      --aviso-texto: #7a5a0e;
+      --erro-fundo: #fbe5e2;
+      --erro-texto: #8a2a1e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--fundo);
+      color: var(--texto);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+    }
+
+    main {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 40px 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      color: var(--destaque);
+    }
+
+    .subtitulo {
+      margin: 4px 0 28px;
+      color: var(--suave);
+    }
+
+    /* Abas */
+    .abas {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .aba {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--suave);
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .aba.ativa {
+      background: var(--cartao);
+      color: var(--destaque);
+      border-color: var(--destaque);
+      font-weight: bold;
+    }
+
+    /* Cartão com o formulário */
+    .cartao {
+      background: var(--cartao);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .cartao h2 {
+      margin: 0 0 4px;
+      font-size: 1.3rem;
+    }
+
+    .cartao p {
+      margin: 0 0 20px;
+      color: var(--suave);
+      font-size: 0.95rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 0.9rem;
+      font-family: system-ui, sans-serif;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      margin-top: 4px;
+      padding: 10px;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #fff;
+    }
+
+    input:focus {
+      outline: 2px solid var(--destaque);
+      border-color: transparent;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      margin-top: 6px;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      background: var(--destaque);
+      color: #fff;
+      font-size: 1rem;
+      font-family: system-ui, sans-serif;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover { background: var(--destaque-hover); }
+    button[type="submit"]:disabled { opacity: 0.6; cursor: wait; }
+
+    .escondido { display: none; }
+
+    /* Mensagem de resultado */
+    .resultado {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      font-family: system-ui, sans-serif;
+      font-size: 0.95rem;
+    }
+
+    .resultado.ok    { background: var(--ok-fundo);    color: var(--ok-texto); }
+    .resultado.aviso { background: var(--aviso-fundo); color: var(--aviso-texto); }
+    .resultado.erro  { background: var(--erro-fundo);  color: var(--erro-texto); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Sebo</h1>
+    <p class="subtitulo">Livros usados, avisos por e-mail.</p>
+
+    <div class="abas">
+      <button class="aba ativa" data-alvo="painel-cliente">Sou cliente</button>
+      <button class="aba" data-alvo="painel-livraria">Sou da livraria</button>
+    </div>
+
+    <!-- Fluxo do cliente: chama a Lambda fazerPedido -->
+    <section id="painel-cliente" class="cartao">
+      <h2>Pedir um livro</h2>
+      <p>Se o livro estiver disponível, você recebe um e-mail na hora. Se não, avisamos quando ele chegar.</p>
+
+      <form id="form-pedido">
+        <label>Código do livro
+          <input name="idLivro" required placeholder="Ex.: L001">
+        </label>
+        <label>Seu e-mail
+          <input name="emailCliente" type="email" required placeholder="voce@exemplo.com">
+        </label>
+        <button type="submit">Fazer pedido</button>
+      </form>
+      <div id="resultado-pedido"></div>
+    </section>
+
+    <!-- Fluxo do colaborador: chama a Lambda cadastrarLivro -->
+    <section id="painel-livraria" class="cartao escondido">
+      <h2>Cadastrar chegada de livro</h2>
+      <p>Se alguém estava esperando por esse livro, a pessoa é avisada automaticamente.</p>
+
+      <form id="form-cadastro">
+        <label>Código do livro
+          <input name="idLivro" required placeholder="Ex.: L001">
+        </label>
+        <label>Título
+          <input name="titulo" required>
+        </label>
+        <label>Autor
+          <input name="autor" required>
+        </label>
+        <label>Quantidade de exemplares
+          <input name="quantidade" type="number" min="1" value="1" required>
+        </label>
+        <button type="submit">Cadastrar</button>
+      </form>
+      <div id="resultado-cadastro"></div>
+    </section>
+  </main>
+
+  <script>
+    // As mesmas URLs que o sebo_cli.py usa
+    const URL_CADASTRAR = "https://sd4hffhvqbyrxuakvwvi5vl66q0wgwhu.lambda-url.us-east-1.on.aws/";
+    const URL_PEDIDO = "https://xvwcywyfeuzouzrvrndczmjgbe0awncb.lambda-url.us-east-1.on.aws/";
+
+    // Envia os dados em JSON para a Lambda (equivalente ao chamar_lambda do Python)
+    async function chamarLambda(url, dados) {
+      const resposta = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dados),
+      });
+      if (!resposta.ok) {
+        throw new Error("A Lambda respondeu com erro " + resposta.status);
+      }
+      return resposta.json();
+    }
+
+    function mostrar(idCaixa, tipo, texto) {
+      const caixa = document.getElementById(idCaixa);
+      caixa.className = "resultado " + tipo;
+      caixa.textContent = texto;
+    }
+
+    // Troca de abas
+    document.querySelectorAll(".aba").forEach((aba) => {
+      aba.addEventListener("click", () => {
+        document.querySelectorAll(".aba").forEach((a) => a.classList.remove("ativa"));
+        document.querySelectorAll(".cartao").forEach((c) => c.classList.add("escondido"));
+        aba.classList.add("ativa");
+        document.getElementById(aba.dataset.alvo).classList.remove("escondido");
+      });
+    });
+
+    // Pedido do cliente
+    document.getElementById("form-pedido").addEventListener("submit", async (e) => {
+      e.preventDefault();  // impede a página de recarregar
+      const form = e.target;
+      const botao = form.querySelector("button");
+      botao.disabled = true;
+
+      try {
+        const resposta = await chamarLambda(URL_PEDIDO, {
+          idLivro: form.idLivro.value.trim(),
+          emailCliente: form.emailCliente.value.trim(),
+        });
+
+        if (resposta.includes("avisado")) {
+          mostrar("resultado-pedido", "ok", "Livro disponível! Enviamos um e-mail para você ir à livraria efetivar a compra.");
+        } else if (resposta.includes("pendente")) {
+          mostrar("resultado-pedido", "aviso", "Livro indisponível no momento. Você receberá um e-mail quando ele chegar.");
+        } else {
+          mostrar("resultado-pedido", "aviso", resposta);
+        }
+      } catch (erro) {
+        mostrar("resultado-pedido", "erro", "Não foi possível fazer o pedido. " + erro.message);
+      } finally {
+        botao.disabled = false;
+      }
+    });
+
+    // Cadastro do colaborador
+    document.getElementById("form-cadastro").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const botao = form.querySelector("button");
+      botao.disabled = true;
+
+      try {
+        const resposta = await chamarLambda(URL_CADASTRAR, {
+          idLivro: form.idLivro.value.trim(),
+          titulo: form.titulo.value.trim(),
+          autor: form.autor.value.trim(),
+          quantidade: parseInt(form.quantidade.value, 10),
+        });
+        mostrar("resultado-cadastro", "ok", resposta);
+        form.reset();
+      } catch (erro) {
+        mostrar("resultado-cadastro", "erro", "Não foi possível cadastrar. " + erro.message);
+      } finally {
+        botao.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
