@@ -7,7 +7,7 @@ Livian Essvein - 2211667
 
 Sistema de um sebo em que o cliente pede um livro e recebe um e-mail quando ele está disponível. Se o livro não estiver no estoque, o pedido fica registrado e o cliente é avisado automaticamente quando um colaborador cadastrar a chegada do livro.
 
-O backend roda na AWS (Learner Lab, região **us-east-1**, conta **9870-1453-0538**). As interfaces rodam no computador do usuário e chamam o backend pela internet.
+O backend roda na AWS. As interfaces rodam no computador do usuário e chamam o backend pela internet usando as URLs.
 
 ## Arquitetura
 
