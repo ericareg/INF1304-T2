@@ -19,14 +19,12 @@ def lambda_handler(event, context):
         qtd_nova = int(nova.get('quantidade', {'N': '0'})['N'])
         qtd_antiga = int(antiga.get('quantidade', {'N': '0'})['N'])
 
-        # Só interessa quando o livro passa de "sem estoque" para "com estoque"
         if qtd_antiga > 0 or qtd_nova <= 0:
             continue
 
         id_livro = nova['idLivro']['S']
         titulo = nova['titulo']['S']
 
-        # Todos os pedidos desse livro
         pedidos = tabela_pedidos.query(
             KeyConditionExpression=Key('idLivro').eq(id_livro)
         )['Items']

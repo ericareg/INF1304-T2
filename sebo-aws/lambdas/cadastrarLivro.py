@@ -5,7 +5,6 @@ dynamodb = boto3.resource('dynamodb')
 tabela = dynamodb.Table('Livros')
 
 def lambda_handler(event, context):
-    # Se veio pela web (URL da função), os dados chegam como texto em 'body'
     if 'body' in event:
         dados = json.loads(event['body'])
     else:
