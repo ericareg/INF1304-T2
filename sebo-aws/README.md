@@ -1,6 +1,9 @@
 # Sebo na AWS
 
-Trabalho 2 de INF1304 – Distribuição e Concorrência (PUC-Rio, 2026/2).
+Trabalho 2 de INF1304 – Distribuição e Concorrência.
+
+Érica Regnier - 2211893
+Livian Essvein - 2211667 
 
 Sistema de um sebo em que o cliente pede um livro e recebe um e-mail quando ele está disponível. Se o livro não estiver no estoque, o pedido fica registrado e o cliente é avisado automaticamente quando um colaborador cadastrar a chegada do livro.
 
