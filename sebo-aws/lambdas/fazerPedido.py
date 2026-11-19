@@ -1,3 +1,7 @@
+"""Lambda fazerPedido: o cliente pede um livro.
+
+Disparada pela web, pela URL da função (POST com JSON).
+"""
 import json
 import boto3
 
@@ -9,6 +13,16 @@ sns = boto3.client('sns')
 TOPICO_ARN = 'arn:aws:sns:us-east-1:987014530538:AvisosLivraria'
 
 def lambda_handler(event, context):
+    """Consulta o estoque e registra o pedido do cliente.
+
+    Se o livro tem quantidade maior que 0, publica um aviso no tópico SNS
+    com o atributo emailCliente (o filtro da assinatura entrega o e-mail
+    só a esse cliente) e grava o pedido como 'avisado'. Caso contrário,
+    grava o pedido como 'pendente', para ser avisado pela notificarClientes.
+
+    Entrada (JSON): idLivro, emailCliente.
+    Saída: statusCode 200 e o status do pedido ('avisado' ou 'pendente').
+    """
     if 'body' in event:
         dados = json.loads(event['body'])
     else:

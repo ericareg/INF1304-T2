@@ -1,14 +1,21 @@
+"""Interface de linha de comando do sebo.
+
+Chama as Lambdas cadastrarLivro e fazerPedido pelas URLs das funções.
+Precisa apenas de Python 3, sem bibliotecas extras.
+"""
 import json
 import urllib.request
 import urllib.error
 
-# URLs das funções Lambda (copiadas do console da AWS)
 URL_CADASTRAR = "https://sd4hffhvqbyrxuakvwvi5vl66q0wgwhu.lambda-url.us-east-1.on.aws/"
 URL_PEDIDO = "https://xvwcywyfeuzouzrvrndczmjgbe0awncb.lambda-url.us-east-1.on.aws/"
 
 
 def chamar_lambda(url, dados):
-    """Envia os dados em JSON para a URL da Lambda e devolve a resposta."""
+    """Envia os dados em JSON (POST) para a URL da Lambda e devolve a resposta.
+
+    Em caso de erro HTTP ou de conexão, devolve uma mensagem de erro em texto.
+    """
     corpo = json.dumps(dados).encode("utf-8")
     requisicao = urllib.request.Request(
         url,
@@ -26,6 +33,7 @@ def chamar_lambda(url, dados):
 
 
 def pedir_livro():
+    """Fluxo do cliente: pede um livro e mostra se está disponível ou pendente."""
     print("\n--- Pedir um livro ---")
     id_livro = input("Código do livro: ").strip()
     email = input("Seu e-mail: ").strip()
@@ -44,6 +52,7 @@ def pedir_livro():
 
 
 def cadastrar_chegada():
+    """Fluxo do colaborador: cadastra a chegada de exemplares de um livro."""
     print("\n--- Cadastrar chegada de livro (colaborador) ---")
     id_livro = input("Código do livro: ").strip()
     titulo = input("Título: ").strip()
@@ -68,6 +77,7 @@ def cadastrar_chegada():
 
 
 def main():
+    """Mostra o menu em loop até o usuário escolher sair."""
     while True:
         print("\n===== Sebo =====")
         print("1 - Pedir um livro (cliente)")
